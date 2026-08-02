@@ -1,0 +1,14 @@
+-- CreateEnum
+CREATE TYPE "JobStatus" AS ENUM ('APPLIED', 'INTERVIEWING', 'OFFER', 'REJECTED');
+
+-- CreateTable
+CREATE TABLE "Job" (
+    "id" TEXT NOT NULL,
+    "company" TEXT NOT NULL,
+    "role" TEXT NOT NULL,
+    "status" "JobStatus" NOT NULL DEFAULT 'APPLIED',
+    "appliedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Job_pkey" PRIMARY KEY ("id")
+);
