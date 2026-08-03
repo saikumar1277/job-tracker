@@ -6,9 +6,7 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  // createManyAndReturn (not createMany) because we need each job's
-  // generated `id` back, to create a matching first history event below.
-  const jobs = await prisma.job.createManyAndReturn({
+  await prisma.job.createMany({
     data: [
       {
         company: "Acme Corp",
@@ -35,16 +33,6 @@ async function main() {
         url: "https://example.com/jobs/umbrella-react",
       },
     ],
-  });
-
-  // Every job needs at least one history event, or it'll never show up
-  // when someone filters the board by date.
-  await prisma.jobStatusEvent.createMany({
-    data: jobs.map((job) => ({
-      jobId: job.id,
-      status: job.status,
-      changedAt: job.appliedAt,
-    })),
   });
 }
 
