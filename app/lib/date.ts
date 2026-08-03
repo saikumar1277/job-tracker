@@ -7,3 +7,13 @@ export function toDateKey(date: Date) {
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
+// The reverse of toDateKey: turn "YYYY-MM-DD" back into a Date at LOCAL
+// midnight. We deliberately avoid `new Date("YYYY-MM-DD")` — the built-in
+// parser treats that format as UTC midnight, which can silently shift the
+// date back a day once you read it back with local fields (like toDateKey
+// does), depending on your timezone.
+export function fromDateKey(dateKey: string) {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
