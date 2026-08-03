@@ -36,6 +36,10 @@ export default function JobsBoard({ jobs }: { jobs: JobModel[] }) {
     });
   }
 
+  function handleJobClick(job: JobModel) {
+    setSelectedJob(job);
+  }
+
   return (
     <>
       <div
@@ -65,7 +69,7 @@ export default function JobsBoard({ jobs }: { jobs: JobModel[] }) {
                     key={job.id}
                     draggable
                     onDragStart={(event) => handleDragStart(event, job.id)}
-                    onClick={() => setSelectedJob(job)}
+                    onClick={() => handleJobClick(job)}
                     className="cursor-grab active:cursor-grabbing"
                   >
                     <JobCard job={job} />
@@ -76,6 +80,12 @@ export default function JobsBoard({ jobs }: { jobs: JobModel[] }) {
           );
         })}
       </div>
+      <JobDetailsModal
+        job={selectedJob}
+        onOpenChange={(open) => {
+          if (!open) setSelectedJob(null);
+        }}
+      />
     </>
   );
 }
