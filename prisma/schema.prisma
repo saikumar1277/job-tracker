@@ -21,11 +21,30 @@ enum JobStatus {
   REJECTED
 }
 
+// Mirrors Supabase's auth.users, one row per signed-up account. Kept in
+// sync by a Postgres trigger (see the add_user_sync_trigger migration) —
+// Prisma's schema can't express "run this when a different table changes,"
+// so that part is raw SQL rather than something declared here.
+model User {
+  id        String   @id
+  email     String?  @unique
+  createdAt DateTime @default(now())
+
+  jobs Job[]
+
+  @@map("users")
+}
+
 model Job {
   id        String    @id @default(cuid())
+
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id])
   company   String
   role      String
   status    JobStatus @default(APPLIED)
   url       String
   appliedAt DateTime  @default(now())
+
+  @@index([userId])
 }
