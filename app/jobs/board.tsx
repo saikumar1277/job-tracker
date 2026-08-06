@@ -43,7 +43,7 @@ export default function JobsBoard({ jobs }: { jobs: JobModel[] }) {
   return (
     <>
       <div
-        className={`mt-6 grid flex-1 grid-cols-6 gap-4 ${isPending ? "opacity-60" : ""}`}
+        className={`mt-6 flex flex-row flex-wrap gap-2  ${isPending ? "opacity-60" : ""} `}
       >
         {STATUS_COLUMNS.map((status) => {
           const jobsInColumn = jobs.filter((job) => job.status === status);
@@ -55,15 +55,17 @@ export default function JobsBoard({ jobs }: { jobs: JobModel[] }) {
               // on dragover is what tells the browser "yes, allow a drop here."
               onDragOver={(event) => event.preventDefault()}
               onDrop={(event) => handleDrop(event, status)}
-              className="min-w-0 rounded-lg  p-2"
+              className="flex min-h-32 w-[164px] flex-col rounded-lg border-2 border-dashed p-4"
             >
-              <h2
-                className={`mb-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ${statusStyles[status]}`}
-              >
-                {statusLabels[status]}
-                <span className="opacity-70">({jobsInColumn.length})</span>
-              </h2>
-              <div className="space-y-3">
+              <div className="flex items-center justify-between  w-max">
+                <h2
+                  className={`mb-3 inline-flex items-center gap-1.5 self-start rounded-full px-3 py-1 text-sm font-semibold ${statusStyles[status]}`}
+                >
+                  {statusLabels[status]}
+                  <span className="opacity-70">({jobsInColumn.length})</span>
+                </h2>
+              </div>
+              <div className="flex flex-col gap-2.5">
                 {jobsInColumn.map((job) => (
                   <div
                     key={job.id}

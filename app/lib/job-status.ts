@@ -30,3 +30,14 @@ export const statusStyles: Record<JobStatus, string> = {
   OFFER: "bg-green-100 text-green-700",
   REJECTED: "bg-red-100 text-red-700",
 };
+
+// Same status colors, but as a left-edge accent bar for job cards so a
+// card's status is visible at a glance without reading the column header.
+export const statusAccent: Record<JobStatus, string> = {
+  NEEDTOAPPLY: "border-l-gray-400",
+  APPLIED: "border-l-blue-400",
+  FOLLOWUP: "border-l-yellow-400",
+  INTERVIEWING: "border-l-amber-400",
+  OFFER: "border-l-green-400",
+  REJECTED: "border-l-red-400",
+};

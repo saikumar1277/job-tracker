@@ -14,7 +14,7 @@ export default function DatePicker({
   onSelect: (date: Date | undefined) => void;
 }) {
   return (
-    <aside className="w-72 shrink-0 space-y-4">
+    <aside className="w-72 shrink-0 space-y-4 p-6">
       <Calendar
         mode="single"
         required

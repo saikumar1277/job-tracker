@@ -3,7 +3,7 @@ import { requireUser } from "@/app/lib/dal";
 import JobsPageClient from "@/app/jobs/jobs-page-client";
 import AddJobModal from "@/app/jobs/add-job-modal";
 import Signout from "../login/signout";
-
+import SearchJobs from "@/app/jobs/searchjobs";
 export default async function JobsPage() {
   // Bounces to /login if nobody's signed in. Everything below only runs
   // for a real, logged-in user.
@@ -15,12 +15,15 @@ export default async function JobsPage() {
   });
 
   return (
-    <main className="mx-auto max-w-7xl px-6 py-10">
+    <main className="mx-auto max-w-8xl  py-10">
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-semibold">Job Applications</h1>
+        <div className="flex justify-between w-[1025px] ">
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-semibold">Job Applications</h1>
 
-          <AddJobModal />
+            <AddJobModal />
+          </div>
+          <SearchJobs jobs={jobs} />
         </div>
 
         <Signout />

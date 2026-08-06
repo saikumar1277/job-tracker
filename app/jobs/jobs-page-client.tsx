@@ -20,7 +20,7 @@ export default function JobsPageClient({ jobs }: { jobs: JobModel[] }) {
   }, [jobs, selectedDate]);
 
   return (
-    <div className="flex flex-row items-start gap-6">
+    <div className="flex flex-row items-start gap-6 ">
       <JobsBoard jobs={visibleJobs} />
       <DatePicker selected={selectedDate} onSelect={setSelectedDate} />
     </div>
