@@ -21,12 +21,8 @@ export default function JobDetailsModal({
   job: JobModel | null;
   onOpenChange: (open: boolean) => void;
 }) {
-  const [isJob, setIsJob] = useState<JobModel | null>(null);
   const router = useRouter();
-  const handleEdit = (job: JobModel) => {
-    setIsJob(job);
-    onOpenChange(false);
-  };
+
   const handleDelete = (jobId: string) => {
     deleteJob(jobId);
     onOpenChange(false);
@@ -73,7 +69,7 @@ export default function JobDetailsModal({
                   </a>
                 </dd>
               </div>
-              <AddJobModal jobData={job} />
+              <AddJobModal jobData={job} onOpenChange={onOpenChange} />
               <Button variant="outline" onClick={() => handleDelete(job.id)}>
                 Delete
               </Button>

@@ -18,14 +18,21 @@ import { toDateKey, fromDateKey } from "@/app/lib/date";
 import { addJob } from "./actions";
 import type { JobStatus } from "@/app/generated/prisma/enums";
 import type { JobModel } from "@/app/generated/prisma/models";
-
+import { updateJobStatus } from "./actions";
+import { useRouter } from "next/navigation";
 // Self-contained: unlike JobDetailsModal/DatePicker, nothing else needs to
 // know whether this dialog is open, so it owns its open/closed state
 // instead of being controlled by a parent.
-export default function AddJobModal({ jobData }: { jobData: JobModel | null }) {
+export default function AddJobModal({
+  jobData,
+  onOpenChange,
+}: {
+  jobData: JobModel | null;
+  onOpenChange: (open: boolean) => void;
+}) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
-
+  const router = useRouter();
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -44,9 +51,14 @@ export default function AddJobModal({ jobData }: { jobData: JobModel | null }) {
     };
 
     startTransition(async () => {
-      await addJob(job);
+      {
+        jobData
+          ? await updateJobStatus(jobData.id, job.status)
+          : await addJob(job);
+      }
       form.reset();
       setOpen(false);
+      onOpenChange(false);
     });
   }
 

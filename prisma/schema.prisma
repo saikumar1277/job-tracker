@@ -31,14 +31,14 @@ model User {
   createdAt DateTime @default(now())
 
   jobs Job[]
-
+  apiKey String @unique
   @@map("users")
 }
 
 model Job {
   id        String    @id @default(cuid())
 
-  userId    String?
+  userId    String
   user      User?     @relation(fields: [userId], references: [id])
   company   String
   role      String
