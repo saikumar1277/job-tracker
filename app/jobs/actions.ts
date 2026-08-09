@@ -2,19 +2,15 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/app/lib/prisma";
-import { requireUser } from "@/app/lib/dal";
 import type { JobStatus } from "@/app/generated/prisma/enums";
-import type { JobUncheckedCreateInput } from "@/app/generated/prisma/models";
+import type {
+  JobCreateInput,
+  JobUpdateInput,
+} from "@/app/generated/prisma/models";
 
 export async function updateJobStatus(jobId: string, status: JobStatus) {
-  const user = await requireUser();
-
-  // updateMany (not update) because we're filtering on userId, not just the
-  // unique id. If jobId belongs to someone else, userId won't match, zero
-  // rows update, and nothing bad happens — instead of one user being able
-  // to drag-and-drop-edit another user's job just by knowing its id.
-  await prisma.job.updateMany({
-    where: { id: jobId, userId: user.id },
+  await prisma.job.update({
+    where: { id: jobId },
     data: {
       status,
     },
@@ -25,11 +21,26 @@ export async function updateJobStatus(jobId: string, status: JobStatus) {
   revalidatePath("/jobs");
 }
 
-export async function addJob(job: Omit<JobUncheckedCreateInput, "userId">) {
-  const user = await requireUser();
-
+export async function addJob(job: JobCreateInput) {
   await prisma.job.create({
-    data: { ...job, userId: user.id },
+    data: job,
+  });
+
+  revalidatePath("/jobs");
+}
+
+export async function editJob(job: JobUpdateInput) {
+  await prisma.job.update({
+    where: { id: job.id as string },
+    data: job,
+  });
+
+  revalidatePath("/jobs");
+}
+
+export async function deleteJob(jobId: string) {
+  await prisma.job.delete({
+    where: { id: jobId },
   });
 
   revalidatePath("/jobs");

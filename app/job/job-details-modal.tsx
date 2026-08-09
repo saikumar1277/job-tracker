@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +10,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { statusLabels, statusStyles } from "@/app/lib/job-status";
 import type { JobModel } from "@/app/generated/prisma/models";
-
+import { Button } from "@/components/ui/button";
+import AddJobModal from "@/app/jobs/add-job-modal";
+import { deleteJob } from "@/app/jobs/actions";
+import { useRouter } from "next/navigation";
 export default function JobDetailsModal({
   job,
   onOpenChange,
@@ -16,6 +21,17 @@ export default function JobDetailsModal({
   job: JobModel | null;
   onOpenChange: (open: boolean) => void;
 }) {
+  const [isJob, setIsJob] = useState<JobModel | null>(null);
+  const router = useRouter();
+  const handleEdit = (job: JobModel) => {
+    setIsJob(job);
+    onOpenChange(false);
+  };
+  const handleDelete = (jobId: string) => {
+    deleteJob(jobId);
+    onOpenChange(false);
+    router.push("/jobs");
+  };
   return (
     // "Controlled" dialog: this component doesn't own open/closed state
     // itself — the parent (JobsBoard) does, via `job` being null or not.
@@ -57,6 +73,10 @@ export default function JobDetailsModal({
                   </a>
                 </dd>
               </div>
+              <AddJobModal jobData={job} />
+              <Button variant="outline" onClick={() => handleDelete(job.id)}>
+                Delete
+              </Button>
             </dl>
           </>
         )}

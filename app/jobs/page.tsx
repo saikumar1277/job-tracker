@@ -4,6 +4,7 @@ import JobsPageClient from "@/app/jobs/jobs-page-client";
 import AddJobModal from "@/app/jobs/add-job-modal";
 import Signout from "../login/signout";
 import SearchJobs from "@/app/jobs/searchjobs";
+import type { JobModel } from "@/app/generated/prisma/models";
 export default async function JobsPage() {
   // Bounces to /login if nobody's signed in. Everything below only runs
   // for a real, logged-in user.
@@ -21,7 +22,7 @@ export default async function JobsPage() {
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-semibold">Job Applications</h1>
 
-            <AddJobModal />
+            <AddJobModal jobData={null} />
           </div>
           <SearchJobs jobs={jobs} />
         </div>

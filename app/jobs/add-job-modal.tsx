@@ -17,11 +17,12 @@ import { STATUS_COLUMNS, statusLabels } from "@/app/lib/job-status";
 import { toDateKey, fromDateKey } from "@/app/lib/date";
 import { addJob } from "./actions";
 import type { JobStatus } from "@/app/generated/prisma/enums";
+import type { JobModel } from "@/app/generated/prisma/models";
 
 // Self-contained: unlike JobDetailsModal/DatePicker, nothing else needs to
 // know whether this dialog is open, so it owns its open/closed state
 // instead of being controlled by a parent.
-export default function AddJobModal() {
+export default function AddJobModal({ jobData }: { jobData: JobModel | null }) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -51,7 +52,12 @@ export default function AddJobModal() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button variant="outline">Add Job</Button>} />
+      {jobData ? (
+        <DialogTrigger render={<Button variant="outline">Edit Job</Button>} />
+      ) : (
+        <DialogTrigger render={<Button variant="outline">Add Job</Button>} />
+      )}
+
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Job</DialogTitle>
@@ -63,17 +69,33 @@ export default function AddJobModal() {
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="space-y-1.5">
             <Label htmlFor="company">Company</Label>
-            <Input id="company" name="company" required />
+            <Input
+              id="company"
+              name="company"
+              required
+              defaultValue={jobData?.company}
+            />
           </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="role">Role</Label>
-            <Input id="role" name="role" required />
+            <Input
+              id="role"
+              name="role"
+              required
+              defaultValue={jobData?.role}
+            />
           </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="url">Job posting URL</Label>
-            <Input id="url" name="url" type="url" required />
+            <Input
+              id="url"
+              name="url"
+              type="url"
+              required
+              defaultValue={jobData?.url}
+            />
           </div>
 
           <div className="space-y-1.5">
@@ -81,7 +103,7 @@ export default function AddJobModal() {
             <select
               id="status"
               name="status"
-              defaultValue="APPLIED"
+              defaultValue={jobData?.status}
               className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
             >
               {STATUS_COLUMNS.map((status) => (
@@ -98,7 +120,7 @@ export default function AddJobModal() {
               id="appliedAt"
               name="appliedAt"
               type="date"
-              defaultValue={toDateKey(new Date())}
+              defaultValue={toDateKey(jobData?.appliedAt ?? new Date())}
               required
             />
           </div>
